@@ -1,9 +1,10 @@
-# coding: utf-8
+# -*- coding: utf-8 -*-
 import urllib,urllib2,re,xbmcplugin,xbmcgui
 
 #Nhaccuatui by longly
 
 def CATEGORIES():
+	addDir(u'Tim Kiem'.encode('utf8'),'http://www.nhaccuatui.com/video.html',3,"DefaultFolder.png")
 	addDir(u'Phim M\u1EDBi & HOT'.encode('utf8'),'http://www.nhaccuatui.com/video.html',1,"DefaultFolder.png")
         addDir(u'Phim hot nh\u1ea5t'.encode('utf8'),'http://www.nhaccuatui.com/video-giai-tri-phim.html',1,"DefaultFolder.png")
         addDir(u'Nh\u1EA1c \u00C2u M\u1EF9'.encode('utf8'),'http://www.nhaccuatui.com/video-am-nhac-au-my.html',1,"DefaultFolder.png")
@@ -20,33 +21,47 @@ def CATEGORIES():
 	addDir(u'Clip Vui','http://www.nhaccuatui.com/video-giai-tri-funny-clip.html',1,"DefaultFolder.png")
                        
 def INDEX(url):
-	print "index "+str(url)
-        req = urllib2.Request(url)
-        req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
-        response = urllib2.urlopen(req)
-	print "index2 "+str(url)
-        link=response.read()
-	print "index3 "+str(url)
-        response.close()
+	dialog = xbmcgui.DialogProgressBG()
+	dialog.create('Nhaccuatui', 'Loading...')
+	try:
+        	req = urllib2.Request(url)
+        	req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
+        	response = urllib2.urlopen(req)
+		print "index2 "+str(url)
+		link=chunk_read(response, dialog)
+	        response.close()
+	except:
+		pass
+	dialog.close()
         match=re.compile('<div class=\"box_absolute\">.+?href="(.+?)".+?src="(.+?)".+?alt="(.+?)".+?</a>', re.DOTALL).findall(link)
 	print match
         for url,thumbnail,name in match:
 		print "new "+str(url)
-                addDir(name,url,2,thumbnail)
+                addLink(name,url,2,thumbnail)
 
 def VIDEOLINKS(url,name,thumbnail):
-	print "video link:"+str(url)
-        req = urllib2.Request(url)
-        req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
-        response = urllib2.urlopen(req)
-        link=response.read()
-        response.close()
+	dialog = xbmcgui.DialogProgressBG()
+	dialog.create('Nhaccuatui', 'Loading…')
+	try:
+		print "video link:"+str(url)
+        	req = urllib2.Request(url)
+        	req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
+        	response = urllib2.urlopen(req)
+		link=chunk_read(response, dialog)
+        	#link=response.read()
+        	response.close()
+	except:
+		pass
+	dialog.close()
         match=re.compile('"contentURL" content="(.+?)"', re.DOTALL).findall(link)
 	print match
         for url1 in match:
-                addLink(name,url1,thumbnail)
+                playVideo(name,url1)
         
-
+def playVideo(name, url):
+	listitem = xbmcgui.ListItem(name)
+	listitem.setInfo('video', {'Title': name, 'Genre': 'Video'})
+	xbmc.Player( xbmc.PLAYER_CORE_MPLAYER ).play(url, listitem)
                 
 def get_params():
         param=[]
@@ -69,12 +84,13 @@ def get_params():
 
 
 
-def addLink(name,url,iconimage):
+def addLink(name,url,mode,iconimage):
+	u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote(name)+"&thumbnail="+urllib.quote_plus(str(iconimage))
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
         liz.setInfo( type="Video", infoLabels={ "Title": name } )
 	print "addlink:"+str(url)
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
+        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz)
         return ok
 
 
@@ -99,6 +115,47 @@ def addNCTLink(name,url,iconimage):
         for url1 in match:
                 addLink(name,url1, iconimage)
 
+def Search():
+	try :
+		keyboard = xbmc.Keyboard('','Enter search text')
+		keyboard.doModal ( )
+		if (keyboard.isConfirmed()) :
+   			searchText = keyboard.getText()
+		INDEX('http://www.nhaccuatui.com/tim-kiem/mv?q='+searchText)
+
+	except : pass
+
+def chunk_report(bytes_so_far, chunk_size, total_size):
+   percent = float(bytes_so_far) / total_size
+   percent = round(percent*100, 2)
+   sys.stdout.write("Downloaded %d of %d bytes (%0.2f%%)\r" % 
+       (bytes_so_far, total_size, percent))
+
+   if bytes_so_far >= total_size:
+      sys.stdout.write('\n')
+
+def chunk_read(response, dialog, chunk_size=8192):
+   #total_size = response.info().getheader('Content-Length').strip()
+   total_size = 100000
+   bytes_so_far = 0
+   data_list = []
+
+   while 1:
+      chunk = response.read(chunk_size)
+      bytes_so_far += len(chunk)
+
+      if not chunk:
+         break
+      data_list.append(chunk)
+      if dialog:
+	percent = float(bytes_so_far) / total_size
+   	percent = round(percent*100, 2)
+	if (percent>100):
+		percent = 100
+	dialog.update(percent)
+	print 'load '+str(bytes_so_far)+' '+str(percent)
+
+   return ''.join(data_list)
 
 params=get_params()
 url=None
@@ -138,6 +195,11 @@ elif mode==1:
         
 elif mode==2:
         VIDEOLINKS(url,name,thumbnail)
+
+elif mode==3:
+	Search()
+elif mode==4:
+	playVideo(name, url)
 
 
 
