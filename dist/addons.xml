@@ -2,7 +2,7 @@
 <addons>
 <addon id="plugin.video.nhaccuatui"
        name="Nhaccuatui"
-       version="1.0.1"
+       version="1.0.2"
        provider-name="longlhp">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
@@ -19,8 +19,8 @@
   </extension>
   <extension point="xbmc.addon.repository"
               name="Longlhp's Add-on Repository">
-    <info compressed="true">https://raw.githubusercontent.com/longlhp/xbmc-addons/master/addons.xml</info>
-    <checksum>https://raw.githubusercontent.com/longlhp/xbmc-addons/master/addon.xml.md5</checksum>
+    <info compressed="true">https://raw.githubusercontent.com/longlhp/xbmc-addons/master/dist/addons.xml</info>
+    <checksum>https://raw.githubusercontent.com/longlhp/xbmc-addons/master/dist/addon.xml.md5</checksum>
     <datadir zip="true">https://raw.githubusercontent.com/longlhp/xbmc-addons/master/dist</datadir>
   </extension>
 </addon>
