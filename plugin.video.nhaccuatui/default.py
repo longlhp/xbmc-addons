@@ -31,6 +31,7 @@ def INDEX(url):
 		link=chunk_read(response, dialog)
 	        response.close()
 	except:
+		link=''
 		pass
 	dialog.close()
         match=re.compile('<div class=\"box_absolute\">.+?href="(.+?)".+?src="(.+?)".+?alt="(.+?)".+?</a>', re.DOTALL).findall(link)
@@ -152,7 +153,7 @@ def chunk_read(response, dialog, chunk_size=8192):
    	percent = round(percent*100, 2)
 	if (percent>100):
 		percent = 100
-	dialog.update(percent)
+	dialog.update(int(percent))
 	print 'load '+str(bytes_so_far)+' '+str(percent)
 
    return ''.join(data_list)
