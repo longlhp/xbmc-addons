@@ -21,7 +21,7 @@ def CATEGORIES():
 	addDir(u'Clip Vui','http://www.nhaccuatui.com/video-giai-tri-funny-clip.html',1,"DefaultFolder.png")
                        
 def INDEX(url):
-	dialog = xbmcgui.DialogProgressBG()
+	dialog = xbmcgui.DialogProgress()
 	dialog.create('Nhaccuatui', 'Loading...')
 	try:
         	req = urllib2.Request(url)
@@ -41,7 +41,7 @@ def INDEX(url):
                 addLink(name,url,2,thumbnail)
 
 def VIDEOLINKS(url,name,thumbnail):
-	dialog = xbmcgui.DialogProgressBG()
+	dialog = xbmcgui.DialogProgress()
 	dialog.create('Nhaccuatui', 'Loading…')
 	try:
 		print "video link:"+str(url)
@@ -122,7 +122,7 @@ def Search():
 		keyboard.doModal ( )
 		if (keyboard.isConfirmed()) :
    			searchText = keyboard.getText()
-		INDEX('http://www.nhaccuatui.com/tim-kiem/mv?q='+searchText)
+		INDEX('http://www.nhaccuatui.com/tim-kiem/mv?q='+urllib.quote(searchText))
 
 	except : pass
 
