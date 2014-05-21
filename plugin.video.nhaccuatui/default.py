@@ -4,10 +4,10 @@ import urllib,urllib2,re,xbmcplugin,xbmcgui
 #Nhaccuatui by longly
 
 def CATEGORIES():
-	addDir(u'Tim Kiem'.encode('utf8'),'http://www.nhaccuatui.com/video.html',3,"DefaultFolder.png")
+	addDir(u'T\u00ECm Ki\u1EBFm\n'.encode('utf8'),'http://www.nhaccuatui.com/video.html',3,"DefaultFolder.png")
 	addDir(u'Phim M\u1EDBi & HOT'.encode('utf8'),'http://www.nhaccuatui.com/video.html',1,"DefaultFolder.png")
-        addDir(u'Phim hot nh\u1ea5t'.encode('utf8'),'http://www.nhaccuatui.com/video-giai-tri-phim.html',1,"DefaultFolder.png")
-        addDir(u'Nh\u1EA1c \u00C2u M\u1EF9'.encode('utf8'),'http://www.nhaccuatui.com/video-am-nhac-au-my.html',1,"DefaultFolder.png")
+	addDir(u'Phim hot nh\u1ea5t'.encode('utf8'),'http://www.nhaccuatui.com/video-giai-tri-phim.html',1,"DefaultFolder.png")
+	addDir(u'Nh\u1EA1c \u00C2u M\u1EF9'.encode('utf8'),'http://www.nhaccuatui.com/video-am-nhac-au-my.html',1,"DefaultFolder.png")
 	addDir(u'Nh\u1EA1c H\u00E0n Qu\u1ED1c'.encode('utf8'),'http://www.nhaccuatui.com/video-am-nhac-han-quoc.html',1,"DefaultFolder.png")
 	addDir(u'Nh\u1EA1c Vi\u1EC7t Nam'.encode('utf8'),'http://www.nhaccuatui.com/video-am-nhac-viet-nam.html',1,"DefaultFolder.png")
 	addDir(u'Nh\u1EA1c Hoa'.encode('utf8'),'http://www.nhaccuatui.com/video-am-nhac-nhac-hoa.html',1,"DefaultFolder.png")
@@ -27,18 +27,26 @@ def INDEX(url):
         	req = urllib2.Request(url)
         	req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
         	response = urllib2.urlopen(req)
-		print "index2 "+str(url)
 		link=chunk_read(response, dialog)
 	        response.close()
 	except:
 		link=''
 		pass
 	dialog.close()
-        match=re.compile('<div class=\"box_absolute\">.+?href="(.+?)".+?src="(.+?)".+?alt="(.+?)".+?</a>', re.DOTALL).findall(link)
-	print match
-        for url,thumbnail,name in match:
-		print "new "+str(url)
-                addLink(name,url,2,thumbnail)
+	match=re.compile('<div class=\"box_absolute\">.+?href="(.+?)".+?src="(.+?)".+?alt="(.+?)".+?</a>', re.DOTALL).findall(link)
+	for url,thumbnail,name in match:
+		addLink(name,url,2,thumbnail)
+	#match=re.compile('=\"box_pageview\".+?class=\"active\".+?href=\"(.+?)\".+?</div>', re.DOTALL).findall(link)
+	match=re.compile('=\"box_pageview\"(.+?)</div>', re.DOTALL).findall(link)
+	bShowReturnMain = False
+	if match:
+		smatch=re.compile(' class=\"active\".+?href=\"(.+?)\"', re.DOTALL).findall(match[0])
+		if smatch:
+			addDir('Next>', smatch[0], 1, "DefaultFolder.png")
+			bShowReturnMain = True
+	if bShowReturnMain:
+		addTopMenu();
+          
 
 def VIDEOLINKS(url,name,thumbnail):
 	dialog = xbmcgui.DialogProgress()
@@ -83,6 +91,12 @@ def get_params():
         return param
 
 
+def addTopMenu():
+	liz=xbmcgui.ListItem(u"Tr\u1EDF v\u1EC1 menu ch\u00EDnh>".encode('utf8'), iconImage="DefaultVideo.png", thumbnailImage="DefaultVideo.png")
+	liz.setInfo( type="Video", infoLabels={ "Title": name } )
+	#print "addlink:"+str(url)
+	ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=sys.argv[0],listitem=liz, isFolder=True)
+	return True
 
 
 def addLink(name,url,mode,iconimage):
@@ -90,7 +104,7 @@ def addLink(name,url,mode,iconimage):
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
         liz.setInfo( type="Video", infoLabels={ "Title": name } )
-	print "addlink:"+str(url)
+	#print "addlink:"+str(url)
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz)
         return ok
 
@@ -112,7 +126,7 @@ def addNCTLink(name,url,iconimage):
         link=response.read()
         response.close()
         match=re.compile('"contentURL" content="(.+?)"', re.DOTALL).findall(link)
-	print match
+	#print match
         for url1 in match:
                 addLink(name,url1, iconimage)
 
