@@ -14,21 +14,19 @@ def CATEGORIES():
 	addDir(u'Nh\u1EA1c Nh\u1EADt'.encode('utf8'),'http://www.nhaccuatui.com/video-am-nhac-nhac-nhat.html',1,"DefaultFolder.png")
 	addDir(u'Gi\u1EA3i Tr\u00ED Kh\u00E1c'.encode('utf8'),'http://www.nhaccuatui.com/video-giai-tri-khac.html',1,"DefaultFolder.png")
 	addDir(u'Th\u1EC3 Lo\u1EA1i Kh\u00E1c'.encode('utf8'),'http://www.nhaccuatui.com/video-am-nhac-the-loai-khac.html',1,"DefaultFolder.png")
-
 	addDir('N+ Show','http://www.nhaccuatui.com/N+show-danh-sach.html',1,"DefaultFolder.png")
-
 	addDir(u'H\u00E0i K\u1ECBch'.encode('utf8'),'http://www.nhaccuatui.com/video-giai-tri-hai-kich.html',1,"DefaultFolder.png")
 	addDir(u'Clip Vui','http://www.nhaccuatui.com/video-giai-tri-funny-clip.html',1,"DefaultFolder.png")
-                       
+											 
 def INDEX(url):
 	dialog = xbmcgui.DialogProgress()
 	dialog.create('Nhaccuatui', 'Loading...')
 	try:
-        	req = urllib2.Request(url)
-        	req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
-        	response = urllib2.urlopen(req)
+		req = urllib2.Request(url)
+		req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
+		response = urllib2.urlopen(req)
 		link=chunk_read(response, dialog)
-	        response.close()
+		response.close()
 	except:
 		link=''
 		pass
@@ -42,53 +40,53 @@ def INDEX(url):
 	if match:
 		smatch=re.compile(' class=\"active\".+?href=\"(.+?)\"', re.DOTALL).findall(match[0])
 		if smatch:
-			addDir('Next>', smatch[0], 1, "DefaultFolder.png")
+			addDir(u'Trang k\u1EBF>'.encode('utf8'), smatch[0], 1, "DefaultFolder.png")
 			bShowReturnMain = True
 	if bShowReturnMain:
 		addTopMenu();
-          
+					
 
 def VIDEOLINKS(url,name,thumbnail):
 	dialog = xbmcgui.DialogProgress()
 	dialog.create('Nhaccuatui', 'Loading…')
 	try:
-		print "video link:"+str(url)
-        	req = urllib2.Request(url)
-        	req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
-        	response = urllib2.urlopen(req)
+		print "video link: "+str(url)
+		req = urllib2.Request(url)
+		req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
+		response = urllib2.urlopen(req)
 		link=chunk_read(response, dialog)
-        	#link=response.read()
-        	response.close()
+		#link=response.read()
+		response.close()
 	except:
 		pass
 	dialog.close()
-        match=re.compile('"contentURL" content="(.+?)"', re.DOTALL).findall(link)
-	print match
-        for url1 in match:
-                playVideo(name,url1)
-        
+	match=re.compile('"contentURL" content="(.+?)"', re.DOTALL).findall(link)
+	#print match
+	for url1 in match:
+		playVideo(name,url1)
+				
 def playVideo(name, url):
 	listitem = xbmcgui.ListItem(name)
 	listitem.setInfo('video', {'Title': name, 'Genre': 'Video'})
 	xbmc.Player( xbmc.PLAYER_CORE_MPLAYER ).play(url, listitem)
-                
+								
 def get_params():
-        param=[]
-        paramstring=sys.argv[2]
-        if len(paramstring)>=2:
-                params=sys.argv[2]
-                cleanedparams=params.replace('?','')
-                if (params[len(params)-1]=='/'):
-                        params=params[0:len(params)-2]
-                pairsofparams=cleanedparams.split('&')
-                param={}
-                for i in range(len(pairsofparams)):
-                        splitparams={}
-                        splitparams=pairsofparams[i].split('=')
-                        if (len(splitparams))==2:
-                                param[splitparams[0]]=splitparams[1]
-                                
-        return param
+	param=[]
+	paramstring=sys.argv[2]
+	if len(paramstring)>=2:
+		params=sys.argv[2]
+		cleanedparams=params.replace('?','')
+		if (params[len(params)-1]=='/'):
+			params=params[0:len(params)-2]
+		pairsofparams=cleanedparams.split('&')
+		param={}
+		for i in range(len(pairsofparams)):
+			splitparams={}
+			splitparams=pairsofparams[i].split('=')
+			if (len(splitparams))==2:
+				param[splitparams[0]]=splitparams[1]
+													
+	return param
 
 
 def addTopMenu():
@@ -101,76 +99,72 @@ def addTopMenu():
 
 def addLink(name,url,mode,iconimage):
 	u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote(name)+"&thumbnail="+urllib.quote_plus(str(iconimage))
-        ok=True
-        liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-        liz.setInfo( type="Video", infoLabels={ "Title": name } )
+	ok=True
+	liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
+	liz.setInfo( type="Video", infoLabels={ "Title": name } )
 	#print "addlink:"+str(url)
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz)
-        return ok
+	ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz)
+	return ok
 
 
 def addDir(name,url,mode,iconimage):
 	#name = name.encode('utf8')
 	#print name
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote(name)+"&thumbnail="+urllib.quote_plus(str(iconimage))
-        ok=True
-        liz=xbmcgui.ListItem(urllib.unquote(name), iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-        liz.setInfo( type="Video", infoLabels={ "Title": name } )
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
-        return ok
+	u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote(name)+"&thumbnail="+urllib.quote_plus(str(iconimage))
+	ok=True
+	liz=xbmcgui.ListItem(urllib.unquote(name), iconImage="DefaultFolder.png", thumbnailImage=iconimage)
+	liz.setInfo( type="Video", infoLabels={ "Title": name } )
+	ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
+	return ok
 
 def addNCTLink(name,url,iconimage):        
 	req = urllib2.Request(url)
-        req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
-        response = urllib2.urlopen(req)
-        link=response.read()
-        response.close()
-        match=re.compile('"contentURL" content="(.+?)"', re.DOTALL).findall(link)
+	req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
+	response = urllib2.urlopen(req)
+	link=response.read()
+	response.close()
+	match=re.compile('"contentURL" content="(.+?)"', re.DOTALL).findall(link)
 	#print match
-        for url1 in match:
-                addLink(name,url1, iconimage)
+	for url1 in match:
+		addLink(name,url1, iconimage)
 
 def Search():
 	try :
 		keyboard = xbmc.Keyboard('','Enter search text')
 		keyboard.doModal ( )
 		if (keyboard.isConfirmed()) :
-   			searchText = keyboard.getText()
+				searchText = keyboard.getText()
 		INDEX('http://www.nhaccuatui.com/tim-kiem/mv?q='+urllib.quote(searchText))
-
 	except : pass
 
 def chunk_report(bytes_so_far, chunk_size, total_size):
-   percent = float(bytes_so_far) / total_size
-   percent = round(percent*100, 2)
-   sys.stdout.write("Downloaded %d of %d bytes (%0.2f%%)\r" % 
-       (bytes_so_far, total_size, percent))
-
-   if bytes_so_far >= total_size:
-      sys.stdout.write('\n')
+	 percent = float(bytes_so_far) / total_size
+	 percent = round(percent*100, 2)
+	 sys.stdout.write("Downloaded %d of %d bytes (%0.2f%%)\r" % 
+			 (bytes_so_far, total_size, percent))
+	 if bytes_so_far >= total_size:
+			sys.stdout.write('\n')
 
 def chunk_read(response, dialog, chunk_size=8192):
-   #total_size = response.info().getheader('Content-Length').strip()
-   total_size = 100000
-   bytes_so_far = 0
-   data_list = []
+	#total_size = response.info().getheader('Content-Length').strip()
+	total_size = 100000
+	bytes_so_far = 0
+	data_list = []
 
-   while 1:
-      chunk = response.read(chunk_size)
-      bytes_so_far += len(chunk)
+	while 1:
+			chunk = response.read(chunk_size)
+			bytes_so_far += len(chunk)
 
-      if not chunk:
-         break
-      data_list.append(chunk)
-      if dialog:
-	percent = float(bytes_so_far) / total_size
-   	percent = round(percent*100, 2)
-	if (percent>100):
-		percent = 100
-	dialog.update(int(percent))
-	print 'load '+str(bytes_so_far)+' '+str(percent)
-
-   return ''.join(data_list)
+			if not chunk:
+				 break
+			data_list.append(chunk)
+			if dialog:
+				percent = float(bytes_so_far) / total_size
+				percent = round(percent*100, 2)
+				if (percent>100):
+					percent = 100
+				dialog.update(int(percent))
+	return ''.join(data_list)
 
 params=get_params()
 url=None
@@ -179,43 +173,38 @@ mode=None
 thumbnail=None
 
 try:
-        url=urllib.unquote_plus(params["url"])
+				url=urllib.unquote_plus(params["url"])
 except:
-        pass
+				pass
 try:
-        name=urllib.unquote(params["name"])
+				name=urllib.unquote(params["name"])
 except:
-        pass
+				pass
 try:
-        mode=int(params["mode"])
+				mode=int(params["mode"])
 except:
-        pass
+				pass
 try:
-        thumbnail=urllib.unquote_plus(params["thumbnail"])
+				thumbnail=urllib.unquote_plus(params["thumbnail"])
 except:
-        pass
+				pass
 
-print "Mode1: "+str(mode)
-print "URL: "+str(url)
-print "Name: "+str(name)
-print "Thumbnail: "+str(thumbnail)
+print "Mode: "+str(mode)+", URL: "+str(url)+", Name: "+str(name)+", Thumbnail: "+str(thumbnail)
 
 if mode==None or url==None or len(url)<1:
-        print ""
-        CATEGORIES()
-       
+	print ""
+	CATEGORIES()
+			 
 elif mode==1:
-        print "index: "+url
-        INDEX(url)
-        
+	print "index: "+url
+	INDEX(url)
+				
 elif mode==2:
-        VIDEOLINKS(url,name,thumbnail)
+	VIDEOLINKS(url,name,thumbnail)
 
 elif mode==3:
 	Search()
 elif mode==4:
 	playVideo(name, url)
-
-
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
