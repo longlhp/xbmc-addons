@@ -24,4 +24,26 @@
     <datadir zip="true">https://raw.githubusercontent.com/longlhp/xbmc-addons/master/dist</datadir>
   </extension>
 </addon>
+
+<addon id="repository.longly"
+		name="Long Ly Add-ons"
+		version="1.0.0"
+		provider-name="Long Ly">
+  <requires>
+    <import addon="xbmc.addon" version="12.0.0"/>
+  </requires>
+	<extension point="xbmc.addon.repository"
+		name="Long Ly Add-on Repository">
+		<info compressed="true">https://raw.githubusercontent.com/longlhp/xbmc-addons/master/dist/addons.xml</info>
+		<checksum>https://raw.githubusercontent.com/longlhp/xbmc-addons/master/dist/addons.md5</checksum>
+		<datadir zip="true">https://raw.githubusercontent.com/longlhp/xbmc-addons/master/dist</datadir>
+		<hashes>true</hashes>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<summary lang="en">4share and Fshare</summary>
+		<description lang="en"></description>
+		<disclaimer lang="en"></disclaimer>
+		<platform>all</platform>
+	</extension>
+</addon>
 </addons>
