@@ -31,8 +31,8 @@ def INDEX(url):
 		link=''
 		pass
 	dialog.close()
-	match=re.compile('<div class=\"box_absolute\">.+?href="(.+?)".+?src="(.+?)".+?alt="(.+?)".+?</a>', re.DOTALL).findall(link)
-	for url,thumbnail,name in match:
+	match=re.compile('<div class=\"box_absolute\">.+?src="(.+?)">.+?</div>.+?href="(.+?)".+?title="(.+?)".+?</a>', re.DOTALL).findall(link)
+	for thumbnail, url, name in match:
 		addLink(name,url,2,thumbnail)
 	#match=re.compile('=\"box_pageview\".+?class=\"active\".+?href=\"(.+?)\".+?</div>', re.DOTALL).findall(link)
 	match=re.compile('=\"box_pageview\"(.+?)</div>', re.DOTALL).findall(link)
