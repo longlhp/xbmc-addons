@@ -60,10 +60,28 @@ def VIDEOLINKS(url,name,thumbnail):
 	except:
 		pass
 	dialog.close()
-	match=re.compile('"contentURL" content="(.+?)"', re.DOTALL).findall(link)
+	#match=re.compile('"contentURL" content="(.+?)"', re.DOTALL).findall(link)
+	match=re.compile('"embedURL" content=".+?swf\?file=(.+?)"', re.DOTALL).findall(link)
+	if match:
+		try:
+			#print "video link: "+str(url)
+			req = urllib2.Request(match[0])
+			req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
+			response = urllib2.urlopen(req)
+			link=chunk_read(response, dialog)
+			#link=response.read()
+			response.close()
+		except:
+			pass
+		dialog.close()
+		print link
+		match=re.compile('(http://[^\]]+?mp4)', re.DOTALL).findall(link)
+		if match:
+			print match
+			playVideo(name, match[len(match)-1])
 	#print match
-	for url1 in match:
-		playVideo(name,url1)
+	#for url1 in match:
+	#	playVideo(name,url1)
 				
 def playVideo(name, url):
 	listitem = xbmcgui.ListItem(name)
