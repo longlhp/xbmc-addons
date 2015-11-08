@@ -1,8 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addons>
+<addon id="plugin.audio.vmusic"
+       name="V Music"
+       version="1.0.1"
+       provider-name="longlhp">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="default.py">
+    <provides>audio</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary>Hear music from VietNam servers</summary>
+    <description>
+      Watch Nhaccuatui Music.
+    </description>
+    <platform>all</platform>
+  </extension>
+</addon>
+
 <addon id="plugin.video.fsrepo"
 		name="FSrepo"
-		version="1.0.21"
+		version="1.0.22"
 		provider-name="Long Ly">
 	<requires>
 		<import addon="xbmc.python" version="2.1.0" />
@@ -22,7 +41,7 @@
 
 <addon id="plugin.video.nhaccuatui"
        name="Nhaccuatui"
-       version="1.0.9"
+       version="1.0.10"
        provider-name="Long Ly">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
@@ -37,27 +56,5 @@
     </description>
     <platform>all</platform>
   </extension>
-</addon>
-
-<addon id="repository.longly"
-		name="Long Ly Add-ons"
-		version="1.0.1"
-		provider-name="Long Ly">
-  <requires>
-    <import addon="xbmc.addon" version="12.0.0"/>
-  </requires>
-	<extension point="xbmc.addon.repository"
-		name="Long Ly Add-on Repository">
-		<info compressed="true">https://raw.githubusercontent.com/longlhp/xbmc-addons/master/dist/addons.xml</info>
-		<checksum>https://raw.githubusercontent.com/longlhp/xbmc-addons/master/dist/addons.xml.md5</checksum>
-		<datadir zip="true">https://raw.githubusercontent.com/longlhp/xbmc-addons/master/dist</datadir>
-		<hashes>true</hashes>
-	</extension>
-	<extension point="xbmc.addon.metadata">
-		<summary lang="en">Long Ly's repository</summary>
-		<description lang="en"></description>
-		<disclaimer lang="en"></disclaimer>
-		<platform>all</platform>
-	</extension>
 </addon>
 </addons>
